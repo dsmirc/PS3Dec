@@ -6,6 +6,6 @@ on:
   pull_request:
     branches: [ "main" ]
     
-- name: CMake Action
-   uses: threeal/cmake-action@v1.3.0
+name: CMake Action
+ -uses: threeal/cmake-action@v1.3.0
             
