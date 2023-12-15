@@ -7,5 +7,5 @@ on:
     branches: [ "main" ]
     
 name: CMake Action
- -uses: threeal/cmake-action@v1.3.0
+-uses: threeal/cmake-action@v1.3.0
             
