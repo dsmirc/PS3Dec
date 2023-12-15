@@ -1,16 +1,38 @@
-name: Build & Publish
-uses: ashutoshvarma/action-cmake-build@master
-with:
-  build-dir: ${{ runner.workspace }}/build # will set the CC & CXX for cmake
-  cc: gcc
-  cxx: g++
-  build-type: Release # Extra options pass to cmake while configuring project
-  configure-options: -DCMAKE_C_FLAGS=-w32 -DPNG_INCLUDE=OFF
-  run-test: true
-  ctest-options: -R mytest # install the build using cmake --install
-  install-build: true # run build using '-j [parallel]' to use multiple threads to build
-  parallel: 14
-- uses: actions/upload-artifact@v3
-  with:
-    name: ps3dec
-    path: ${{ runner.workspace }}/build/ps3dec
+# Name of the workflow
+name: Build and upload ps3dec
+
+# Trigger the workflow on push or pull request
+on: [push, pull_request]
+
+# Define the jobs
+jobs:
+  # Job name
+  build-and-upload:
+    # Run the job on ubuntu-latest
+    runs-on: ubuntu-latest
+    # Define the steps
+    steps:
+      # Check out the repository
+      - uses: actions/checkout@v2
+      # Install yaml2json and jq
+      - run: sudo apt-get install -y yaml2json jq
+      # Define the variables
+      - name: Set variables
+        run: |
+          echo "ARTIFACT=ps3dec" >> $GITHUB_ENV
+          echo "YAML_FILE=ps3dec.yaml" >> $GITHUB_ENV
+          echo "REPO_URL=$ { { github.repository }}" >> $GITHUB_ENV
+          echo "TOKEN=$ { { secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
+      # Build the artifact using the YAML file
+      - name: Build the artifact
+        run: |
+          echo "Building the artifact $ARTIFACT using the YAML file $YAML_FILE"
+          yaml2json $YAML_FILE | jq -r '.build' | bash
+      # Upload the artifact to the repository using the GitHub API
+      - name: Upload the artifact
+        run: |
+          echo "Uploading the artifact $ARTIFACT to the repository $REPO_URL"
+          curl -H "Authorization: token $TOKEN" \
+               -H "Content-Type: application/zip" \
+               --data-binary @$ARTIFACT.zip \
+               "$REPO_URL/releases/download/v1.0/$ARTIFACT.zip" # Change v1.0 to your release tag
