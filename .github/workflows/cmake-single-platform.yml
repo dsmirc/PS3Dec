@@ -1,38 +1,30 @@
-# Name of the workflow
-name: Build and upload ps3dec
+name: Build and Upload Artifact
 
-# Trigger the workflow on push or pull request
-on: [push, pull_request]
+on:
+  push:
+    branches: [ main ]
 
-# Define the jobs
 jobs:
-  # Job name
-  build-and-upload:
-    # Run the job on ubuntu-latest
+  build:
     runs-on: ubuntu-latest
-    # Define the steps
+
     steps:
-      # Check out the repository
-      - uses: actions/checkout@v2
-      # Install yaml2json and jq
-      - run: sudo apt-get install -y yaml2json jq
-      # Define the variables
-      - name: Set variables
-        run: |
-          echo "ARTIFACT=ps3dec" >> $GITHUB_ENV
-          echo "YAML_FILE=ps3dec.yaml" >> $GITHUB_ENV
-          echo "REPO_URL=$ { { github.repository }}" >> $GITHUB_ENV
-          echo "TOKEN=$ { { secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
-      # Build the artifact using the YAML file
-      - name: Build the artifact
-        run: |
-          echo "Building the artifact $ARTIFACT using the YAML file $YAML_FILE"
-          yaml2json $YAML_FILE | jq -r '.build' | bash
-      # Upload the artifact to the repository using the GitHub API
-      - name: Upload the artifact
-        run: |
-          echo "Uploading the artifact $ARTIFACT to the repository $REPO_URL"
-          curl -H "Authorization: token $TOKEN" \
-               -H "Content-Type: application/zip" \
-               --data-binary @$ARTIFACT.zip \
-               "$REPO_URL/releases/download/v1.0/$ARTIFACT.zip" # Change v1.0 to your release tag
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2.4.0
+      with:
+        node-version: '14.x'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build project
+      run: npm run build
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: ps3dec-artifact
+        path: dist/
