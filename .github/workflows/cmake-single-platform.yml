@@ -5,28 +5,7 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up CMake
-        uses: actions/setup-cmake@v1
-        with:
-          cmake-version: '3.21.3'  # Change this to the version you want
-
-      - name: Install mbedtls dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libmbedtls-dev
-
-      - name: Configure and build project
-        run: |
-          mkdir build
-          cd build
-          cmake ..
-          cmake --build .
+    
+- name: CMake Action
+ uses: threeal/cmake-action@v1.3.0
+            
