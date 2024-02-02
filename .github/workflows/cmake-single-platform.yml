@@ -1,32 +1,47 @@
-name: Build and Upload Artifact
+name: C/C++ CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ nightly ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ nightly ]
+  workflow_dispatch:
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-
+  build-i686-windows:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
-    - name: Set up Node.js
-      uses: actions/setup-node@v2.4.0
-      with:
-        node-version: '14.x'
-
-    - name: Install dependencies
-      run: npm install
-
-    - name: Build project
-      run: npm run build
-
-    - name: Upload artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: ps3dec-artifact
-        path: dist/
+      - name: Install MSYS2
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW32
+          update: true
+          install: >-
+            git
+            make
+            mingw-w64-i686-toolchain
+            mingw-w64-i686-SDL2
+            mingw-w64-i686-zlib
+            mingw-w64-i686-gcc
+            mingw-w64-x86_64-gcc
+            mingw-w64-i686-glew
+            mingw-w64-x86_64-glew
+            mingw-w64-i686-SDL2
+            mingw-w64-i686-SDL
+            mingw-w64-x86_64-SDL2
+            mingw-w64-x86_64-SDL
+            mingw-w64-mbedtls
+            python3
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Build sm64ex
+        run: make -j$(nproc) WINDOWS_BUILD=1 EXTERNAL_DATA=1 EXT_OPTIONS_MENU=1 EXT_OPTIONS_MENU=1
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: sm64ex-windows
+          path: D:\a\PS3Dec\PS3Dec\build\
+          retention-days: 0
