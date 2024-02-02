@@ -40,10 +40,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
       - name: Build ps3dec
-        run: cmake
+        run: cmake -G Ninja .. && ninja
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
-          name: sm64ex-windows
+          name: ps3dec-windows
           path: D:\a\PS3Dec\PS3Dec\build\
           retention-days: 0
