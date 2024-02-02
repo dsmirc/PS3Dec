@@ -33,7 +33,7 @@ jobs:
             mingw-w64-i686-SDL
             mingw-w64-x86_64-SDL2
             mingw-w64-x86_64-SDL
-            mingw-w64-mbedtls
+            mingw-w64-x86_64-mbedtls
             python3
       - name: Checkout repository
         uses: actions/checkout@v3
