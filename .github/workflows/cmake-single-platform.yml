@@ -34,12 +34,14 @@ jobs:
             mingw-w64-x86_64-SDL2
             mingw-w64-x86_64-SDL
             mingw-w64-x86_64-mbedtls
-            mingw-w64-x86_64-cmake
             mingw-w64-x86_64-ninja
             python3
-      - name: Install dependencies
-        run: |
-          choco install cmake
+      - name: Setup cmake
+        uses: jwlawson/actions-setup-cmake@v1.14
+        with:
+          cmake-version: '3.16.x'
+      - name: Use cmake
+        run: cmake --version
       - name: Checkout repository
         uses: actions/checkout@v3
       - name: Build ps3dec
