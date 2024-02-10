@@ -1,54 +1,42 @@
-name: C/C++ CI
+name: Compile C App
 
 on:
   push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
-  workflow_dispatch:
+    branches:
+      - main
 
 jobs:
-  build-i686-windows:
-    runs-on: windows-latest
-    defaults:
-      run:
-        shell: msys2 {0}
+  build:
+    runs-on: ubuntu-latest
+
     steps:
-      - name: Install MSYS2
-        uses: msys2/setup-msys2@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y build-essential
+
+      - name: Compile for Linux
+        run: gcc -o PS3Dec PS3Dec.c -lmbedtls -fopenmp
+
+      - name: Upload Linux artifact
+        uses: actions/upload-artifact@v2
         with:
-          msystem: MINGW32
-          update: true
-          install: >-
-            git
-            make
-            mingw-w64-i686-toolchain
-            mingw-w64-i686-SDL2
-            mingw-w64-i686-zlib
-            mingw-w64-i686-gcc
-            mingw-w64-x86_64-gcc
-            mingw-w64-i686-glew
-            mingw-w64-x86_64-glew
-            mingw-w64-i686-SDL2
-            mingw-w64-i686-SDL
-            mingw-w64-x86_64-SDL2
-            mingw-w64-x86_64-SDL
-            mingw-w64-x86_64-mbedtls
-            mingw-w64-x86_64-ninja
-            python3
-      - name: Setup cmake
-        uses: jwlawson/actions-setup-cmake@v1.14
+          name: linux-executable
+          path: PS3dec
+
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Compile for Windows
+        run: gcc -o PS3Dec.exe PS3Dec.c -lmbedtls -fopenmp
+
+      - name: Upload Windows artifact
+        uses: actions/upload-artifact@v2
         with:
-          cmake-version: '3.16.x'
-      - name: Use cmake
-        run: cmake --version
-      - name: Checkout repository
-        uses: actions/checkout@v3
-      - name: Build ps3dec
-        run: cmake -G Ninja .. && ninja
-      - name: Upload artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: ps3dec-windows
-          path: D:\a\PS3Dec\PS3Dec\build\
-          retention-days: 0
+          name: windows-executable
+          path: PS3Dec.exe
