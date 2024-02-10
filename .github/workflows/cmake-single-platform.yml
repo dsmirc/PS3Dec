@@ -3,7 +3,7 @@ name: Compile C App
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   build:
