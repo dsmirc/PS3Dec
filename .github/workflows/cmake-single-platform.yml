@@ -25,7 +25,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: linux-executable
-          path: PS3dec
+          path: .
 
   build-windows:
     runs-on: windows-latest
@@ -42,7 +42,7 @@ jobs:
           mkdir build && cd build
           vcpkg install mbedtls
           vcpkg integrate install
-          cmake -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake .. && make .
+          cmake -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake .. && msbuild PS3Dec.sln
 
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v2
