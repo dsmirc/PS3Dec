@@ -5,6 +5,8 @@ originally posted on the [k3y forums](https://web.archive.org/web/20140326142553
 This is a slightly modified version of PS3Dec r5, using statically-linked
 mbedTLS for AES encryption/decryption and CMake as the build system.
 
+This fork contains the prebuilt binaries, you can download them through Github actions artifacts (you need a github account) or through the Releases page if you don't have a github account, both linux and windows builds are provided.
+
 ### Original README
 ```
 PS3Dec r5
