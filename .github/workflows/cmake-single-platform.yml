@@ -27,14 +27,14 @@ jobs:
           name: linux-executable
           path: .
 
-      - name: Create Release
-        id: create_release
+      - name: Create Linux Release
+        id: create_linux_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v${{ github.run_number }}
-          release_name: Release ${{ github.run_number }}
+          tag_name: v${{ github.run_number }}-linux
+          release_name: Linux Release ${{ github.run_number }}
           draft: false
           prerelease: false
           files: |
@@ -64,14 +64,14 @@ jobs:
           name: windows-executable
           path: .
 
-      - name: Create Release
-        id: create_release
+      - name: Create Windows Release
+        id: create_windows_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v${{ github.run_number }}
-          release_name: Release ${{ github.run_number }}
+          tag_name: v${{ github.run_number }}-windows
+          release_name: Windows Release ${{ github.run_number }}
           draft: false
           prerelease: false
           files: |
