@@ -41,7 +41,8 @@ jobs:
         run: |
           mkdir build && cd build
           vcpkg install mbedtls
-          cmake .. && make
+          vcpkg integrate install
+          cmake -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake .. && make
 
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v2
