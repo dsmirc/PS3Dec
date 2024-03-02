@@ -17,7 +17,9 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y build-essential libmbedtls-dev
 
       - name: Compile for Linux
-        run: gcc -o PS3Dec PS3Dec.c -lmbedtls -fopenmp
+        run: |
+          mkdir build && cd build
+          cmake .. && make
 
       - name: Upload Linux artifact
         uses: actions/upload-artifact@v2
@@ -32,11 +34,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Setup msbuild
+        uses: microsoft/setup-msbuild@v1
+
       - name: Compile for Windows
         run: |
           mkdir build && cd build
           vcpkg install mbedtls
-          cmake .. && cmake --build .
+          cmake .. && make
 
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v2
