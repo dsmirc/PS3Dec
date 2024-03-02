@@ -36,7 +36,7 @@ jobs:
         run: |
           mkdir build && cd build
           vcpkg install mbedtls
-          cmake .. && cmake --build ..
+          cmake .. && cmake --build .
 
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v2
