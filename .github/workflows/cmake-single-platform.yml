@@ -25,20 +25,15 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: linux-executable
-          path: .
+          path: ./build/Release/
 
-      - name: Create Linux Release
-        id: create_linux_release
-        uses: actions/create-release@v1
+      - name: Upload Linux Releases
+        uses: xresloader/upload-to-github-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v${{ github.run_number }}-linux
-          release_name: Linux Release ${{ github.run_number }}
+          file: ./build/Release/
           draft: false
-          prerelease: false
-          files: |
-            ./build/*
 
 
   build-windows:
@@ -64,15 +59,11 @@ jobs:
           name: windows-executable
           path: .
 
-      - name: Create Windows Release
-        id: create_windows_release
-        uses: actions/create-release@v1
+
+      - name: Upload Releases 
+        uses: xresloader/upload-to-github-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v${{ github.run_number }}-windows
-          release_name: Windows Release ${{ github.run_number }}
+          file: "*.exe"
           draft: false
-          prerelease: false
-          files: |
-            ./build/*
